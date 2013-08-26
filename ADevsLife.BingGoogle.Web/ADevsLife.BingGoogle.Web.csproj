@@ -93,12 +93,6 @@
   <ItemGroup>
     <WCFMetadata Include="Service References\" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\ADevsLife.BingGoogle.ServiceAgent\ADevsLife.BingGoogle.SearchAgent.csproj">
-      <Project>{bc30769a-6d93-4a83-9f5e-a9b11ca46c8b}</Project>
-      <Name>ADevsLife.BingGoogle.SearchAgent</Name>
-    </ProjectReference>
-  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
