@@ -1,0 +1,105 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>Bing & Google Search</title>
+    <link type="text/css" href="Site.css" rel="stylesheet" />
+    <script type="text/javascript" src="jquery.min.js"> </script>
+</head>
+<body>
+    <header>
+        <div class="content-wrapper">
+            <div class="float-left">
+                <p class="site-title">
+                    <a href="~/">Bing & Google Search</a>
+                </p>
+            </div>
+        </div>
+    </header>
+    <div id="body">
+            <div class="content-wrapper" id="dvSearch">
+                <input type="text" id="q" name="q" style="width:80%;" /> <input type="button" id="btnGo" name="btnGo" value="go" />
+            </div>
+        <div class="content-wrapper" id="dvLoading">
+            <h4>One moment please while I politely ask Google and Bing for data ...</h4>
+        </div>
+        <div class="content-wrapper clear-fix">
+            <div id="dvReturn">
+                <div class="float-left results" id="dvResults0">
+
+                </div>
+                <div class="float-left results" id="dvResults1">
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("div#dvLoading").hide();
+
+            $("#btnGo").click(function () {
+                var q = $("#q").val();
+               DoSearch(q);
+            });
+            $(document).keypress(function (e) {
+                if (e.which == 13) {
+                    var q = $("#q").val();
+                    DoSearch(q);
+                }
+            });
+        });
+        function DoSearch(q) {
+            $.ajax({
+                type: "GET",
+                url: '/Search.svc/DoSearch?q=' + q,
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                beforeSend: function () {
+                    $("div#dvLoading").show();
+                    $("div#dvResults0").empty();
+                    $("div#dvResults1").empty();
+                },
+                complete: function () {
+                    $("div#dvLoading").hide();
+                },
+                success: function (data) {
+                    var html = "";
+                    if (data != null) {
+                        if (data.d != null) {
+                            for (var i = 0; i < 2; i++) {
+                                var cnt = data.d.ProviderResults[i].SearchResults.length - 1;
+                                html = "";
+
+                                for (var x = 0; x < cnt; x++) {
+                                    var desc = data.d.ProviderResults[i].SearchResults[x].Description;
+                                    var displayUrl = data.d.ProviderResults[i].SearchResults[x].DisplayUrl;
+                                    var title = data.d.ProviderResults[i].SearchResults[x].Title;
+                                    var url = data.d.ProviderResults[i].SearchResults[x].Url;
+                                    var result = '<div >' +
+                                        '<h5><a href="' + url + '" target="_blank">' + title + '</a></h5>' +
+                                        '<div><a href="' + url + '" target="_blank">' + displayUrl + '</a></div>' +
+                                        '<div>' + desc + '</div>' +
+                                        '</div>';
+                                    html += result;
+                                }
+                                html += "<h3>Powered By " + data.d.ProviderResults[i].SearchEngineProvider + "</h3>";
+                                $("div#dvResults" + i).html(html);
+                            }
+                        }
+                    }
+                },
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                    $("#dvSearch").show();
+                    $("#dvLoading").hide();
+                    $("#dvReturn").show();
+                    alert("Um, you broke it. I could blame myself for letting you break it but that would make an ass out of you and me :)");
+                }
+            });
+
+        }
+    </script>
+</body>
+</html>

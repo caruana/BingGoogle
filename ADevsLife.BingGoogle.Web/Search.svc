@@ -1,0 +1,1 @@
+﻿<%@ ServiceHost Language="C#" Debug="true" Service="ADevsLife.BingGoogle.Web.Search" CodeBehind="Search.svc.cs" %>
